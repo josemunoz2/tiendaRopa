@@ -1,20 +1,23 @@
 # Imagen base oficial con Java 17
 FROM eclipse-temurin:17-jdk
 
-# Directorio dentro del contenedor
+# Directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiamos todo el proyecto
-COPY . .
+# Copiar solo los archivos necesarios
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
 
-# Damos permiso al mvnw
+# Dar permisos a mvnw
 RUN chmod +x mvnw
 
-# Construimos la app
-RUN ./mvnw clean install
+# Compilar el proyecto (sin correr los tests para hacerlo más rápido)
+RUN ./mvnw clean install -DskipTests
 
-# Exponemos el puerto 8080
+# Exponer el puerto 8080
 EXPOSE 8080
 
-# Comando para arrancar la app
-CMD ["java", "-jar", "target/*.jar"]
+# Comando para correr el .jar final
+CMD ["java", "-jar", "target/compa-erogay-0.0.1-SNAPSHOT.jar"]
